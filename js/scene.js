@@ -1,4 +1,6 @@
-/* global THREE calculatePositions, calculateNormals, calculateColors*/
+/* global THREE calculatePositions, calculateNormals,
+calculateColors, smoothPositions , extractHeightValues,
+injectSmoothedHeights */
 
 function setupGeometry() {
   const positions = calculatePositions();
@@ -57,6 +59,6 @@ function setupCamera() {
   return camera;
 }
 
-window.scene = setupScene();
-window.renderer = setupRenderer();
-window.camera = setupCamera();
+// window.scene = setupScene();
+// window.renderer = setupRenderer();
+// window.camera = setupCamera();
