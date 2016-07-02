@@ -60,17 +60,17 @@ function diamondThisArray(array) {
 }
 
 function reconstruct(array) {
+  console.log(array)
   if (array.length === 1) {
     return array;
   }
-  const stackTopArray = array[0].concat(array[1].concat(array[2].concat(array[4])));
+  const stackTopArray = array[0].concat(array[1].concat(array[2].concat(array[3])));
   const heightArray = array;
   heightArray.shift();
   heightArray.shift();
   heightArray.shift();
   heightArray.shift();
   heightArray.push(stackTopArray);
-  console.log(heightArray)
   return reconstruct(heightArray);
 }
 
