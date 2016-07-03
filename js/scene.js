@@ -59,6 +59,6 @@ function setupCamera() {
   return camera;
 }
 
-// window.scene = setupScene();
-// window.renderer = setupRenderer();
-// window.camera = setupCamera();
+window.scene = setupScene();
+window.renderer = setupRenderer();
+window.camera = setupCamera();

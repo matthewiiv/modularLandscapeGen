@@ -1,9 +1,10 @@
 /* global THREE, addXYZValues, calculateNormal */
 
-const vertices = 25;
-const landscapeVar = 0.5;
-const landscapeVarAdj = landscapeVar / 2;
-//const offset = Math.sqrt(squares) / 2;
+const vertices = 1089;
+const squares = 1024;
+// const landscapeVar = 0.5;
+// const landscapeVarAdj = landscapeVar / 2;
+const offset = Math.sqrt(squares) / 2;
 
 function addColors(vector) {
   if (vector.y > 10) {
@@ -14,69 +15,84 @@ function addColors(vector) {
   return new THREE.Vector3(0.1, 0.8, 0.1);
 }
 
-function diamondThisArray(array) {
-  if (array[0][0].indexOf(null) === -1) {
+function diamondThisArray(array, indexArray) {
+  if (array[array.length - 1].indexOf(null) === - 1) {
     return array;
   }
-  const outputArray = array;
-  const stackTopArray = outputArray[0];
-  outputArray.shift();
-  const max = stackTopArray.length - 1;
+  const firstStackArray = indexArray[0];
+  const yArray = array;
+  const nextIndexArray = indexArray;
+  nextIndexArray.shift();
+  const max = firstStackArray.length - 1;
   const mid = max / 2;
-  let variation = Math.random() * landscapeVar - landscapeVarAdj;
-  stackTopArray[0][mid] = (stackTopArray[0][0] + stackTopArray[0][max]) / 2 + variation;
-  variation = Math.random() * landscapeVar - landscapeVarAdj;
-  stackTopArray[mid][0] = (stackTopArray[0][0] + stackTopArray[max][0]) / 2 + variation;
-  variation = Math.random() * landscapeVar - landscapeVarAdj;
-  stackTopArray[max][mid] = (stackTopArray[max][0] + stackTopArray[max][max]) / 2 + variation;
-  variation = Math.random() * landscapeVar - landscapeVarAdj;
-  stackTopArray[mid][max] = (stackTopArray[0][max] + stackTopArray[max][max]) / 2 + variation;
-  variation = Math.random() * landscapeVar - landscapeVarAdj;
-  stackTopArray[mid][mid] = (stackTopArray[0][0] + stackTopArray[0][max] +
-  stackTopArray[max][0] + stackTopArray[max][max]) / 4 + variation;
+  const xref1 = firstStackArray[0][0][0];
+  const zref1 = firstStackArray[0][0][1];
+  const xref2 = firstStackArray[0][max][0];
+  const zref2 = firstStackArray[0][max][1];
+  const xref3 = firstStackArray[max][0][0];
+  const zref3 = firstStackArray[max][0][1];
+  const xref4 = firstStackArray[max][max][0];
+  const zref4 = firstStackArray[max][max][1];
 
-  if (stackTopArray.length > 2) {
-    const array1 = [];
-    for (let i = 0; i <= mid; i++) {
-      array1.push(stackTopArray[i].slice(0, mid + 1));
-    }
-    const array2 = [];
-    for (let i = 0; i <= mid; i++) {
-      array2.push(stackTopArray[i].slice(mid, max + 1));
-    }
-    const array3 = [];
-    for (let i = mid; i <= max; i++) {
-      array3.push(stackTopArray[i].slice(0, mid + 1));
-    }
-    const array4 = [];
-    for (let i = mid; i <= max; i++) {
-      array4.push(stackTopArray[i].slice(mid, max + 1));
-    }
-    outputArray.push(array1, array2, array3, array4);
-  } else {
-    outputArray.push(stackTopArray);
+  const xChange1 = firstStackArray[0][mid][0];
+  const zChange1 = firstStackArray[0][mid][1];
+  const xChange2 = firstStackArray[mid][0][0];
+  const zChange2 = firstStackArray[mid][0][1];
+  const xChange3 = firstStackArray[mid][max][0];
+  const zChange3 = firstStackArray[mid][max][1];
+  const xChange4 = firstStackArray[max][mid][0];
+  const zChange4 = firstStackArray[max][mid][1];
+  const xChange5 = firstStackArray[mid][mid][0];
+  let variation = 0;
+  if (yArray[xChange1][zChange1] === null) {
+    variation = Math.random() - 0.5;
+    yArray[xChange1][zChange1] = (yArray[xref1][zref1] + yArray[xref2][zref2]) / 2 + variation;
   }
-  return diamondThisArray(outputArray);
+  const zChange5 = firstStackArray[mid][mid][1];
+  if (yArray[xChange2][zChange2] === null) {
+    variation = Math.random() - 0.5;
+    yArray[xChange2][zChange2] = (yArray[xref1][zref1] + yArray[xref3][zref3]) / 2 + variation;
+  }
+  if (yArray[xChange3][zChange3] === null) {
+    variation = Math.random() - 0.5;
+    yArray[xChange3][zChange3] = (yArray[xref2][zref2] + yArray[xref4][zref4]) / 2 + variation;
+  }
+  if (yArray[xChange4][zChange4] === null) {
+    variation = Math.random() - 0.5;
+    yArray[xChange4][zChange4] = (yArray[xref3][zref3] + yArray[xref4][zref4]) / 2 + variation;
+  }
+  variation = Math.random() - 0.5;
+  yArray[xChange5][zChange5] = (yArray[xref1][zref1] + yArray[xref2][zref2] +
+  yArray[xref1][zref1] + yArray[xref2][zref2]) / 4 + variation;
+  // split array, add to end of stack and recurse
+
+  const array1 = [];
+  for (let i = 0; i < mid + 1; i++) {
+    array1.push(firstStackArray[i].slice(0, mid + 1));
+  }
+  const array2 = [];
+  for (let i = 0; i < mid + 1; i++) {
+    array2.push(firstStackArray[i].slice(mid));
+  }
+  const array3 = [];
+  for (let i = mid; i < max + 1; i++) {
+    array3.push(firstStackArray[i].slice(0, mid + 1));
+  }
+  const array4 = [];
+  for (let i = mid; i < max + 1; i++) {
+    array4.push(firstStackArray[i].slice(mid));
+  }
+  nextIndexArray.push(array1, array2, array3, array4);
+  return diamondThisArray(yArray, nextIndexArray);
 }
 
-function reconstruct(array) {
-  console.log(array)
-  if (array.length === 1) {
-    return array;
-  }
-  const stackTopArray = array[0].concat(array[1].concat(array[2].concat(array[3])));
-  const heightArray = array;
-  heightArray.shift();
-  heightArray.shift();
-  heightArray.shift();
-  heightArray.shift();
-  heightArray.push(stackTopArray);
-  return reconstruct(heightArray);
-}
 
 function calculatePositions() {
-  const positionsFull = [];
+  const positions = [];
+  const indexFull = [];
   const initialPositions = [];
+  const indexPositions = [];
+
   for (let i = 0; i < Math.sqrt(vertices); i++) {
     const row = [];
     for (let j = 0; j < Math.sqrt(vertices); j++) {
@@ -84,30 +100,37 @@ function calculatePositions() {
     }
     initialPositions.push(row);
   }
+  for (let i = 0; i < Math.sqrt(vertices); i++) {
+    const row = [];
+    for (let j = 0; j < Math.sqrt(vertices); j++) {
+      row.push([i, j]);
+    }
+    indexPositions.push(row);
+  }
 
   initialPositions[0][0] = 1;
   initialPositions[0][Math.sqrt(vertices) - 1] = 1;
   initialPositions[Math.sqrt(vertices) - 1][0] = 1;
   initialPositions[Math.sqrt(vertices) - 1][Math.sqrt(vertices) - 1] = 1;
-  positionsFull.push(initialPositions);
-  const heights = diamondThisArray(positionsFull);
-  const heightMap = reconstruct(heights);
-  // console.log(heightMap);
-  // for (let j = 0, len = squares / Math.sqrt(squares); j < len; j++) {
-  //   for (let i = 0; i < len; i++) {
-  //     const v1 = new THREE.Vector3(i - offset, Math.random() < 0.0002 ? 20 : 0, j - offset);
-  //     const v2 = new THREE.Vector3(i + 1 - offset, 0, j - offset);
-  //     const v3 = new THREE.Vector3(i - offset, 0, j + 1 - offset);
-  //     const v4 = new THREE.Vector3(i + 1 - offset, 0, j + 1 - offset);
-  //     addXYZValues(positions, v1);
-  //     addXYZValues(positions, v2);
-  //     addXYZValues(positions, v3);
-  //     addXYZValues(positions, v2);
-  //     addXYZValues(positions, v3);
-  //     addXYZValues(positions, v4);
-  //   }
-  // }
-  return initialPositions;
+  indexFull.push(indexPositions);
+  const heights = diamondThisArray(initialPositions, indexFull);
+  console.log(heights);
+
+  for (let j = 0, len = squares / Math.sqrt(squares); j < len; j++) {
+    for (let i = 0; i < len; i++) {
+      const v1 = new THREE.Vector3(i - offset, heights[j][i], j - offset);
+      const v2 = new THREE.Vector3(i + 1 - offset, heights[j][i + 1], j - offset);
+      const v3 = new THREE.Vector3(i - offset, heights[j + 1][i], j + 1 - offset);
+      const v4 = new THREE.Vector3(i + 1 - offset, heights[j + 1][i + 1], j + 1 - offset);
+      addXYZValues(positions, v1);
+      addXYZValues(positions, v2);
+      addXYZValues(positions, v3);
+      addXYZValues(positions, v2);
+      addXYZValues(positions, v3);
+      addXYZValues(positions, v4);
+    }
+  }
+  return positions;
 }
 
 calculatePositions();
