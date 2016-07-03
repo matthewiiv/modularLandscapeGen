@@ -1,15 +1,20 @@
 /* global THREE, addXYZValues, calculateNormal */
 
-const vertices = 1089;
-const squares = 1024;
+const vertices = 4225;
+const squares = 4096;
+// Number between 1 & infinity
+const smoothingFactor = 3;
+
 // const landscapeVar = 0.5;
 // const landscapeVarAdj = landscapeVar / 2;
 const offset = Math.sqrt(squares) / 2;
 
 function addColors(vector) {
-  if (vector.y > 10) {
+  if (vector.y > 9) {
     return new THREE.Vector3(0.8, 0.8, 0.8);
-  } else if (vector.y > 5) {
+  } else if (vector.y > 6) {
+    return new THREE.Vector3(0.4, 0.4, 0.4);
+  } else if (vector.y > 3) {
     return new THREE.Vector3(0.54, 0.27, 0.074);
   }
   return new THREE.Vector3(0.1, 0.8, 0.1);
@@ -43,28 +48,28 @@ function diamondThisArray(array, indexArray) {
   const xChange4 = firstStackArray[max][mid][0];
   const zChange4 = firstStackArray[max][mid][1];
   const xChange5 = firstStackArray[mid][mid][0];
+
   let variation = 0;
   if (yArray[xChange1][zChange1] === null) {
-    variation = Math.random() - 0.5;
+    variation = (Math.random() - 0.5) * (firstStackArray.length / smoothingFactor);
     yArray[xChange1][zChange1] = (yArray[xref1][zref1] + yArray[xref2][zref2]) / 2 + variation;
   }
   const zChange5 = firstStackArray[mid][mid][1];
   if (yArray[xChange2][zChange2] === null) {
-    variation = Math.random() - 0.5;
+    variation = (Math.random() - 0.5) * (firstStackArray.length / smoothingFactor);
     yArray[xChange2][zChange2] = (yArray[xref1][zref1] + yArray[xref3][zref3]) / 2 + variation;
   }
   if (yArray[xChange3][zChange3] === null) {
-    variation = Math.random() - 0.5;
+    variation = (Math.random() - 0.5) * (firstStackArray.length / smoothingFactor);
     yArray[xChange3][zChange3] = (yArray[xref2][zref2] + yArray[xref4][zref4]) / 2 + variation;
   }
   if (yArray[xChange4][zChange4] === null) {
-    variation = Math.random() - 0.5;
+    variation = (Math.random() - 0.5) * (firstStackArray.length / smoothingFactor);
     yArray[xChange4][zChange4] = (yArray[xref3][zref3] + yArray[xref4][zref4]) / 2 + variation;
   }
-  variation = Math.random() - 0.5;
+  variation = (Math.random() - 0.5) * (firstStackArray.length / smoothingFactor);
   yArray[xChange5][zChange5] = (yArray[xref1][zref1] + yArray[xref2][zref2] +
   yArray[xref1][zref1] + yArray[xref2][zref2]) / 4 + variation;
-  // split array, add to end of stack and recurse
 
   const array1 = [];
   for (let i = 0; i < mid + 1; i++) {
